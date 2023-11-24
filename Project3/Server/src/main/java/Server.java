@@ -57,21 +57,6 @@ public class Server{
 				//	callback.accept("Server Socket Did Not Launch");
 				}
 			}
-
-		public void sendUpdatedConnectivity(Connectivity updatedConnectivity) {
-			for (ClientThread t : players) {
-				try {
-					t.out.writeObject(updatedConnectivity);
-				} catch (Exception e) {
-					e.printStackTrace();;
-				}
-			}
-		}
-
-		public void updatePlayersConnectivity() {
-			sendUpdatedConnectivity(connectivity);
-
-		}
 	}
 
 		public class ClientThread extends Thread {
@@ -130,7 +115,6 @@ public class Server{
 						System.out.println("Word to guess: " + guessingWord);
 						connectivity.categoryWordLength = guessingWord.length();
 						System.out.println("Length: " + connectivity.categoryWordLength);
-						server.updatePlayersConnectivity();
 
 					} catch (Exception e) {
 						callback.accept("Something Wrong Happened With The Socket From Player #: " + playerCount + " closing down!");
