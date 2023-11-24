@@ -1,0 +1,20 @@
+/*
+    #ffffff - white
+    #faf4f6 - tiniest of pink
+    #f5eaed - peach
+    #f1e0e4 - light pink
+    #ecd5dc - pink
+ */
+
+.button{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: #faf4f6 ;
+    -fx-border-color: #ecd5dc;
+    -fx-font-family: "Arial";
+}
+
+.border{
+    -fx-background-color: #ffffff;
+
+}
