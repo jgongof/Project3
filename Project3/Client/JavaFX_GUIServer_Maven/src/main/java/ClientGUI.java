@@ -33,7 +33,7 @@ public class ClientGUI extends Application {
 
     //global variables
     public String chosenCategory;
-    //public GameLogic myGame;
+    public GameLogic myGame;
     private List<Label> lettersList;
     int categoryOneChances = 3;
     int categoryTwoChances = 3;
@@ -156,7 +156,7 @@ public class ClientGUI extends Application {
     }
     //choose which category to play from
     void createCategoriesScene(Stage primaryStage) {
-        // myGame = new GameLogic();
+        myGame = new GameLogic();
         Label chooseACatLabel = new Label("Choose a category!");
         chooseACatLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
@@ -205,7 +205,7 @@ public class ClientGUI extends Application {
 
         if (categoryOneChances == 0 || categoryTwoChances == 0 || categoryThreeChances == 0) {
             hasWon = false;
-            // createFinalScene(primaryStage); //goes to final scene if the user lost every chance in one category
+            createFinalScene(primaryStage); //goes to final scene if the user lost every chance in one category
         }
 
         //disables buttons if got the word right
@@ -225,7 +225,7 @@ public class ClientGUI extends Application {
         //moves to final scene if got all the categories correct
         if (guessedCat1Word && guessedCat2Word && guessedCat3Word) {
             hasWon = true;
-            // createFinalScene(primaryStage);
+            createFinalScene(primaryStage);
         }
 
         //Action events for all buttons
@@ -273,7 +273,7 @@ public class ClientGUI extends Application {
             Label chosenCategoryLabel = new Label("Chosen Category: " + chosenCategory);
             chosenCategoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
-            Label guessesRemainingLabel = new Label("Guesses Remaining: " + connectivity.attempts);
+            Label guessesRemainingLabel = new Label("Guesses Remaining: " +  myGame.numGuesses);
             guessesRemainingLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
             BorderPane topBorderPane = new BorderPane();
@@ -282,7 +282,7 @@ public class ClientGUI extends Application {
 
             //give information of the word
             //connectivity = (Connectivity) in.readObject();
-            int numLettersInWord = connectivity.categoryWordLength;
+            int numLettersInWord = myGame.correctWord.length();
             Label startingMessage = new Label("There are " + numLettersInWord + " letters in this word\n You have 6 guesses");
             Label endingMessage = new Label(" ");
 
