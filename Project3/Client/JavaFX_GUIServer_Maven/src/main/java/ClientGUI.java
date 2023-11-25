@@ -59,41 +59,43 @@ public class ClientGUI extends Application {
     //Getting port number scene
     @Override
     public void start(Stage primaryStage) {
-        //createTitleScene(primaryStage);
+       createTitleScene(primaryStage);
 
-        primaryStage.setTitle("Server Configuration");
-        primaryStage.setScene(serverConnectionScene());
-        primaryStage.show();
+		primaryStage.setTitle("Client");
+		primaryStage.setScene(serverConnectionScene());
+		primaryStage.show();
 
-        //Action done needing to connect to server
-        connect.setOnAction(e -> {
+		//Action done needing to connect to server
+		connect.setOnAction(e->{
 
-            try {
-                port = Integer.parseInt(portTextField.getText());
+			try
+			{
+				port = Integer.parseInt(portTextField.getText());
 
-                if (port >= 0) {
+				if(port >= 0)
+				{
 
-                    clientConnection = new Client(data -> {
+					clientConnection = new Client(data -> {
+						Platform.runLater(() -> {
+							connectivity = (Connectivity) data;
+						});
+					}, port);
+				}
+			}
+			catch(NumberFormatException ex)
+			{
+				errorLabel.setText("Invalid port number. Please enter a valid integer.");
+			}
+			createTitleScene(primaryStage); //goes into the title scene to begin the game
+		});
 
-                        connectivity = (Connectivity) data;
-                        connectivity.playerActivity = "connecting";
-                        clientConnection.send(connectivity);
-
-                    }, port);
-                }
-            } catch (NumberFormatException ex) {
-                errorLabel.setText("Invalid port number. Please enter a valid integer.");
-            }
-            createTitleScene(primaryStage); //goes into the title scene to begin the game
-        });
-
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent t) {
-                Platform.exit();
-                System.exit(0);
-            }
-        });
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent t) {
+				Platform.exit();
+				System.exit(0);
+			}
+		});
 
     }
 
