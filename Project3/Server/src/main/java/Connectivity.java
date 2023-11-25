@@ -6,14 +6,21 @@ public class Connectivity implements Serializable{
     int dessertWordLength;
     int ftWordLength;
     int citiesWordLength;
-    int attempts;
 
-    boolean gotCorrectLetter;
-    boolean gotCorrectWord;
+    int wordLength;
+
+    int numGuesses;
 
     String correctDessert;
     String correctFairyTale;
     String correctCity;
+
+
+
+    boolean gotCorrectLetter;
+    boolean gotCorrectWord;
+    boolean alreadyGuessed;
+
 
     int categoryNumber;
 
@@ -26,4 +33,6 @@ public class Connectivity implements Serializable{
     int desserts_attempts;
     int fairytales_attempts;
     int cities_attempts;
+
+    String command;
 }
