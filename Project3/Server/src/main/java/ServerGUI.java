@@ -64,6 +64,7 @@ public class ServerGUI extends Application{
                                 Platform.runLater(() -> {
                                    //connectivity = (Connectivity) data;
                                    listItems.getItems().add(data.toString());
+
                                 });
                             }, port);
                         }
