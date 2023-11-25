@@ -101,24 +101,33 @@ public class ClientGUI extends Application {
 
     //Making of the actual port getting scene
     public Scene serverConnectionScene() {
-        connect = new Button("Connect");
-        connect.setStyle("-fx-pref-width: 300px");
-        connect.setStyle("-fx-pref-height: 300px");
-        connect.setMinHeight(10);
-        connect.setMinWidth(15);
+       connect = new Button("Connect");
 
-        portInstruction = new Label("Enter Port Number:");
-        portInstruction.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
+		connect.setMinHeight(10);
+		connect.setMinWidth(15);
+		connect.setStyle("-fx-border-color: #ecd5dc; -fx-border-width: 1px; -fx-background-color: #ecd5dc;");
+		connect.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
 
-        portTextField = new TextField();
-        portTextField.setMinHeight(10);
-        portTextField.setMinWidth(10);
+		portInstruction = new Label("Enter Port Number:");
+		portInstruction.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
-        HBox ports = new HBox(portInstruction, portTextField, connect);
+		portTextField = new TextField();
+		portTextField.setMaxSize(100, 30);
 
-        BorderPane root = new BorderPane();
-        root.setTop(ports);
-        return new Scene(root, 700, 600);
+		Label topLabel= new Label ("Client Port Connection");
+		topLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 16));
+
+		VBox ports = new VBox(portInstruction, portTextField, connect);
+
+
+		BorderPane root = new BorderPane();
+		root.setCenter(ports);
+		root.setTop(topLabel);
+		root.setAlignment(topLabel, Pos.CENTER);
+
+		ports.setAlignment(Pos.CENTER);
+		ports.setSpacing(20);
+		return new Scene(root, 700, 600);
     }
 
 
