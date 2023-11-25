@@ -97,24 +97,32 @@ public class ServerGUI extends Application{
 
         public Scene serverConnectionScene()
         {
-            connect = new Button("Connect");
-            connect.setStyle("-fx-pref-width: 300px");
-            connect.setStyle("-fx-pref-height: 300px");
+         connect = new Button("Connect");
+
             connect.setMinHeight(10);
             connect.setMinWidth(15);
+            connect.setStyle("-fx-border-color: #ecd5dc; -fx-border-width: 1px; -fx-background-color: #ecd5dc;");
+            connect.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
 
             portInstruction = new Label("Enter Port Number:");
-            portInstruction.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
+            portInstruction.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
             portTextField = new TextField();
-            portTextField.setMinHeight(10);
-            portTextField.setMinWidth(10);
+            portTextField.setMaxSize(100, 30);
 
-            HBox ports = new HBox(portInstruction, portTextField, connect);
+            Label topLabel= new Label ("Server Port Connection");
+            topLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 16));
+
+            VBox ports = new VBox(portInstruction, portTextField, connect);
+
 
             BorderPane root = new BorderPane();
-            root.setTop(ports);
+            root.setCenter(ports);
+            root.setTop(topLabel);
+            root.setAlignment(topLabel, Pos.CENTER);
+
+            ports.setAlignment(Pos.CENTER);
+            ports.setSpacing(20);
             return new Scene(root, 700, 600);
         }
-
 }
