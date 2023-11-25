@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class Client {
@@ -13,7 +14,7 @@ public class Client {
 	private Consumer<Serializable> callback;
 	int port;
 
-	//Connectivity connectivity;
+	Connectivity connection = new Connectivity();
 
 	Client(Consumer<Serializable> call, int port){
 
@@ -23,10 +24,9 @@ public class Client {
 		player.start();
 	}
 
-	public void send(Connectivity message)
+	public void message(Connectivity message)
 	{
 		try{
-			System.out.println("In Send: " + message.playerActivity);
 			out.writeObject(message);
 		}catch (IOException e)
 		{
@@ -34,10 +34,11 @@ public class Client {
 		}
 	}
 
-//	public Connectivity update()
-//	{
-//		return connectivity;
-//	}
+
+	public Connectivity update()
+	{
+		return connection;
+	}
 
 	public class Clientele extends Thread{
 
@@ -54,10 +55,10 @@ public class Client {
 			while(true) {
 
 				try {
-					Connectivity connectivity = (Connectivity) in.readObject();
-					System.out.println("Length of the word is: " + connectivity.dessertWordLength);
-					//System.out.println("Updated: " + connectivity.userLetter);
-					callback.accept(connectivity);
+					connection = (Connectivity) in.readObject();
+					System.out.println("Player Recieved Something From Server.");
+					System.out.println("Updated: " + connection.userLetter);
+					callback.accept(connection);
 				}
 				catch(Exception e) {}
 			}
