@@ -314,17 +314,6 @@ public class ClientGUI extends Application{
 
 		int numLettersInWord=connectivity.wordLength;
 
-//		if (connectivity.categoryNumber==1){
-//			numLettersInWord= connectivity.dessertWordLength;
-//		}
-//		if (connectivity.categoryNumber==2){
-//			numLettersInWord= connectivity.ftWordLength;
-//		}
-//		else if (connectivity.categoryNumber==3){
-//			numLettersInWord= connectivity.citiesWordLength;
-//		}
-
-
 		Label startingMessage= new Label("There are " + numLettersInWord + " letters in this word\n You have 6 guesses");
 		Label endingMessage = new Label(" ");
 
@@ -383,8 +372,12 @@ public class ClientGUI extends Application{
 				guessButton.setOnAction(event->{
 
 					connectivity.userLetter= userInput.getText().charAt(0);
+					connectivity.command= "Playing";
+
 					clientConnection.message(connectivity);
 
+					System.out.print("letters in word: " + connectivity.wordLength);
+					System.out.print("correct letter? " + connectivity.gotCorrectLetter);
 					// myGame.setUserGuess(userInput.getText().charAt(0)); // send this to the server
 
 					//Messages given to the user depending on how well they guessed
@@ -404,9 +397,9 @@ public class ClientGUI extends Application{
 
 					//prints forming word with correct letter positions
 					for (int i=0; i<numLettersInWord; i++){
-						char currChar= myGame.currUserWord[i];
+						char currChar= connectivity.currUserWord[i];
 						if (!Character.isWhitespace(currChar)){
-							lettersList.get(i).setText(Character.toString(myGame.currUserWord[i]));
+							lettersList.get(i).setText(Character.toString(connectivity.currUserWord[i]));
 						}
 					}
 
@@ -415,7 +408,7 @@ public class ClientGUI extends Application{
 //					}
 
 					//Then checks that the word is correct everytime in case the forming word is formed
-					myGame.checkCorrectWord();
+//					myGame.checkCorrectWord(); // this should be done in the server
 
 					//Set the booleans for each category to true if formed word is correct
 					if (myGame.isCorrectWord){
