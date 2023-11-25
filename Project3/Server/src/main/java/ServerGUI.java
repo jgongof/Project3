@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -97,7 +99,7 @@ public class ServerGUI extends Application{
 
         public Scene serverConnectionScene()
         {
-         connect = new Button("Connect");
+            connect = new Button("Connect");
 
             connect.setMinHeight(10);
             connect.setMinWidth(15);
@@ -125,4 +127,6 @@ public class ServerGUI extends Application{
             ports.setSpacing(20);
             return new Scene(root, 700, 600);
         }
+
 }
+
