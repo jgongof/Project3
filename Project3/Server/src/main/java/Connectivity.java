@@ -35,4 +35,6 @@ public class Connectivity implements Serializable{
     int cities_attempts;
 
     String command;
+
+    char [] currUserWord; // array of characters in the user guessed word
 }
