@@ -28,7 +28,7 @@ public class GameLogic {
     }
 
     // choose a random word in the speciefied category
-    public String chooseRandomWord(int i){
+    public void chooseRandomWord(int i){
         //for each category get a random word and then delete it so the user never gets the same word twice
         switch (i) {
             case 1:
@@ -56,7 +56,6 @@ public class GameLogic {
                 break;
         }
         setUserWord(); //creates the forming word
-        return correctWord;
     }
 
     //Initializes the forming word as all null but the size of the correct word
