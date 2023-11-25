@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class Server{
+public class Server extends Thread{
 
 	int playersCount = 0;
 	ArrayList<ClientThread> players = new ArrayList<ClientThread>();
@@ -33,6 +33,20 @@ public class Server{
 		String announcement2 = "Server Is Waiting For A Connection...";
 		callback.accept(announcement2);
 	}
+	public void sendUpdatedConnectivity(Connectivity updatedConnectivity) {
+		for (ClientThread t : players) {
+			try {
+				t.out.writeObject(updatedConnectivity);
+			} catch (Exception e) {
+				e.printStackTrace();;
+			}
+		}
+	}
+
+	public void updatePlayersConnectivity() {
+		sendUpdatedConnectivity(connectivity);
+
+	}
 
 
 	public class ServerThreads extends Thread{
@@ -57,6 +71,7 @@ public class Server{
 				//	callback.accept("Server Socket Did Not Launch");
 				}
 			}
+
 	}
 
 		public class ClientThread extends Thread {
@@ -73,6 +88,41 @@ public class Server{
 			ClientThread(Socket s, int count) {
 				this.connection = s;
 				this.playerCount = count;
+			}
+
+			public void initialization(int playerNumber)
+			{
+				GameLogic gameLogic1 = new GameLogic();
+				ClientThread temp = players.get(playerCount - 1);
+
+				connectivity.correctDessert = gameLogic1.chooseRandomWord(1);
+				connectivity.correctFairyTale = gameLogic1.chooseRandomWord(2);
+				connectivity.correctCity = gameLogic1.chooseRandomWord(3);
+
+
+				connectivity.dessertWordLength = connectivity.correctDessert.length();
+				connectivity.ftWordLength = connectivity.correctFairyTale.length();
+				connectivity.citiesWordLength = connectivity.correctCity.length();
+
+				connectivity.attempts = 6;
+
+				connectivity.gotCorrectLetter = false;
+				connectivity.gotCorrectWord = false;
+
+				connectivity.categoryNumber = 0;
+
+				connectivity.playerActivity = "Initialization";
+
+				connectivity.desserts_attempts = 3;
+				connectivity.fairytales_attempts = 3;
+				connectivity.cities_attempts = 3;
+
+				try{
+					temp.out.writeObject(connectivity);
+				}catch(Exception e){
+					System.out.println("Error: " + e.getMessage());
+				}
+
 			}
 
 
@@ -98,23 +148,20 @@ public class Server{
 				}
 				updateClients("New Player Has Arrived: Player#" + playerCount);
 
+				connectivity = new Connectivity();
 
+				initialization(playerCount);
 
 				while (true) {
 					try {
 						connectivity = (Connectivity) in.readObject();
-						callback.accept(connectivity);
-						String temp = "Player #" + playerCount + ": " + connectivity.playerActivity;
-						callback.accept(temp);
-						//temp = "Server recived message from Player #" + playerCount;
-						//callback.accept(temp);
-						//System.out.println("From server: " + connectivity.categoryWordLength);
+						System.out.println("#" + playerCount + "+" + connectivity.playerActivity);
+						String message = "Player #" + playerCount + ": " + connectivity.playerActivity;
+						callback.accept(message);
 						connectivity.playerActivity = "";
-
-						guessingWord = gameLogic.chooseRandomWord(connectivity.categoryNumber);
-						System.out.println("Word to guess: " + guessingWord);
-						connectivity.categoryWordLength = guessingWord.length();
-						System.out.println("Length: " + connectivity.categoryWordLength);
+						System.out.println("Word to guess: " + connectivity.correctDessert);
+						//connectivity.categoryWordLength = guessingWord.length();
+						System.out.println("Length: " + connectivity.dessertWordLength);
 
 					} catch (Exception e) {
 						callback.accept("Something Wrong Happened With The Socket From Player #: " + playerCount + " closing down!");

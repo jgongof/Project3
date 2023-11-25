@@ -3,13 +3,19 @@ import java.util.ArrayList;
 public class Connectivity implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    int categoryWordLength;
-    int attempts = 6;
+    int dessertWordLength;
+    int ftWordLength;
+    int citiesWordLength;
+    int attempts;
 
     boolean gotCorrectLetter;
     boolean gotCorrectWord;
 
-    int categoryNumber = 0;
+    String correctDessert;
+    String correctFairyTale;
+    String correctCity;
+
+    int categoryNumber;
 
     String playerActivity;
 
@@ -17,7 +23,7 @@ public class Connectivity implements Serializable{
 
     char userLetter;
 
-    int desserts_attempts = 3;
-    int fairytales_attempts = 3;
-    int cities_attempts = 3;
+    int desserts_attempts;
+    int fairytales_attempts;
+    int cities_attempts;
 }

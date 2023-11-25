@@ -13,7 +13,7 @@ public class Client {
 	private Consumer<Serializable> callback;
 	int port;
 
-	Connectivity connectivity;
+	//Connectivity connectivity;
 
 	Client(Consumer<Serializable> call, int port){
 
@@ -26,6 +26,7 @@ public class Client {
 	public void send(Connectivity message)
 	{
 		try{
+			System.out.println("In Send: " + message.playerActivity);
 			out.writeObject(message);
 		}catch (IOException e)
 		{
@@ -33,10 +34,10 @@ public class Client {
 		}
 	}
 
-	public Connectivity update()
-	{
-		return connectivity;
-	}
+//	public Connectivity update()
+//	{
+//		return connectivity;
+//	}
 
 	public class Clientele extends Thread{
 
@@ -53,9 +54,9 @@ public class Client {
 			while(true) {
 
 				try {
-					connectivity = (Connectivity) in.readObject();
-					System.out.println("Length of the word is: " + connectivity.categoryWordLength);
-					System.out.println("Updated: " + connectivity.userLetter);
+					Connectivity connectivity = (Connectivity) in.readObject();
+					System.out.println("Length of the word is: " + connectivity.dessertWordLength);
+					//System.out.println("Updated: " + connectivity.userLetter);
 					callback.accept(connectivity);
 				}
 				catch(Exception e) {}
