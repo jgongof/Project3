@@ -46,12 +46,6 @@ public class Server extends Thread{
 	}
 
 
-//	public void updatePlayersConnectivity() {
-//		sendUpdatedConnectivity(connectivity);
-//
-//	}
-
-
 	public class ServerThreads extends Thread{
 
 		public void run() {
@@ -102,15 +96,13 @@ public class Server extends Thread{
 			connectivity.correctFairyTale = gameLogic1.chooseRandomWord(2);
 			connectivity.correctCity = gameLogic1.chooseRandomWord(3);
 
-
 			connectivity.dessertWordLength = connectivity.correctDessert.length();
 			connectivity.ftWordLength = connectivity.correctFairyTale.length();
 			connectivity.citiesWordLength = connectivity.correctCity.length();
 
 			connectivity.numGuesses = 6;
 
-			connectivity.gotCorrectLetter = false;
-			connectivity.gotCorrectWord = false;
+			connectivity.wonDessert = false;
 
 			connectivity.categoryNumber = 0;
 
@@ -155,7 +147,7 @@ public class Server extends Thread{
 			connectivity = new Connectivity();
 
 			initialization(playerCount);
-
+			GameLogic myGame= new GameLogic();
 
 			while (true) {
 				try {
@@ -166,13 +158,12 @@ public class Server extends Thread{
 					System.out.println("Category Number: " + tempConnectivity.categoryNumber);
 
 					if (tempConnectivity.command!=null && tempConnectivity.command.equals("category")){
+
 						if (tempConnectivity.categoryNumber==1){
 							System.out.println("Word to guess: " + tempConnectivity.correctDessert);
 							System.out.println("Length: " + tempConnectivity.dessertWordLength);
 							correctWord = tempConnectivity.correctDessert;
 							tempConnectivity.wordLength= tempConnectivity.dessertWordLength;
-
-
 						}
 						else if (tempConnectivity.categoryNumber==2){
 							System.out.println("Word to guess: " + tempConnectivity.correctFairyTale);
@@ -187,33 +178,79 @@ public class Server extends Thread{
 							tempConnectivity.wordLength= tempConnectivity.citiesWordLength;
 						}
 
+						// initialize curr user word in connectivity
+						tempConnectivity.currUserWord = new char[tempConnectivity.wordLength];
+						connectivity.currUserWord = new char[tempConnectivity.wordLength];
+
+						for (int i=0; i<tempConnectivity.wordLength; i++){
+							tempConnectivity.currUserWord[i]= ' ';
+							connectivity.currUserWord[i] = ' ';
+						}
+
+						//tempConnectivity.currUserWord = myGame.setUserWord(correctWord); // initialize current user word in connectivity
 						connectivity.categoryNumber= tempConnectivity.categoryNumber;
 						connectivity.wordLength = tempConnectivity.wordLength;
 						tempConnectivity.command = "word length";
 
 					}
 
-//					if(connectivity.command!=null && tempConnectivity.command=){
-//
-//					}
+					System.out.println("this is my guess rn: " + tempConnectivity.userLetter + "++");
 
+					// get character array and send it out
+					if(connectivity.command!=null && tempConnectivity.command.equals("Playing")){
 
-					// --------------------------------------------------
+//						tempConnectivity.userLetter= connectivity.userLetter
+						myGame.correctWord= correctWord;
+						System.out.println("correct word: " + myGame.correctWord);
+						myGame.setUserWord(myGame.correctWord);
+						message = "Player# " + playerCount + ": Checking Letter";
+						callback.accept(message);
+						myGame.userGuess= tempConnectivity.userLetter;
 
-					System.out.print(tempConnectivity.wordLength);
-					sendUpdatedConnectivity(tempConnectivity);
-//					gameLogic1.correctWord= correctWord;
-					System.out.print(correctWord);
-					message = " Player # " + playerCount + " guessed letter: " + tempConnectivity.userLetter;
-					callback.accept (message);
-//
-//					gameLogic1.checkLetter(connectivity.userLetter);
-//					connectivity.alreadyGuessed = gameLogic1.alreadyGuessed;
+						System.out.println("Before Checking: user guess: " + myGame.userGuess + " tempCon user guess: " + tempConnectivity.userLetter);
+						myGame.checkLetter(myGame.userGuess);
+						System.out.println("After Checking: " + "is correct: " + myGame.isCorrectLetter);
+						//concantonate them together
+						for(int i = 0; i < correctWord.length(); i++)
+						{
+							if(myGame.currUserWord[i] != ' ')
+							{
+								tempConnectivity.currUserWord[i] = myGame.currUserWord[i];
+							}
+						}
 
+						String beString = new String(tempConnectivity.currUserWord);
+						System.out.println("String of temp: " +  beString + "--");
+						tempConnectivity.gotCorrectLetter = myGame.isCorrectLetter;
+						tempConnectivity.numGuesses=myGame.numGuesses;
+						tempConnectivity.alreadyGuessed = myGame.alreadyGuessed;
+						myGame.checkCorrectWord(tempConnectivity.currUserWord);
+						tempConnectivity.gotCorrectWord = myGame.isCorrectWord;
+						System.out.println("Correct word-->" + tempConnectivity.gotCorrectWord);
+						message = "Did player " + playerCount + " get correct letter --> " +tempConnectivity.gotCorrectLetter;
+						callback.accept(message);
 
+						message = " Player # " + playerCount + " guessed letter: " + tempConnectivity.userLetter;
 
+						callback.accept (message);
+					}
+					if(connectivity.command!=null && tempConnectivity.command.equals("WonCategory")){
+						switch (tempConnectivity.categoryNumber)
+						{
+							case 1:
+								tempConnectivity.wonDessert = true;
+								break;
+							case 2:
+								tempConnectivity.wonFairytale = true;
+								break;
+							case 3:
+								tempConnectivity.wonCities = true;
+								break;
+						}
+					}
+						sendUpdatedConnectivity(tempConnectivity);
 				} catch (Exception e) {
-					callback.accept("Something Wrong Happened With The Socket From Player #: " + playerCount + " closing down!");
+					callback.accept("Something Wrong Happened With The Socket From Player #: " + playerCount + " closing down!" + e.getMessage());
 					//updateClients("Player #" + playerCount + " has left the server!");
 					players.remove(this);
 					playersCount--;
@@ -225,10 +262,7 @@ public class Server extends Thread{
 	}
 }
 
-	
-	
 
-	
-	
 
-	
+
+
