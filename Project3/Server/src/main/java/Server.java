@@ -1,267 +1,134 @@
+import java.util.HashMap;
+import java.util.ArrayList;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.function.Consumer;
-
-public class Server extends Thread{
-
-	int playersCount = 0;
-	ArrayList<ClientThread> players = new ArrayList<ClientThread>();
-	ServerThreads server;
-	private Consumer<Serializable> callback;
-	public int port;
-	CreateCategories categories;
-
-	String correctWord;
-	int chances;//3 chances
-	Connectivity connectivity;
 
 
-	Server(Consumer<Serializable> call, int port){
+public class ServerGUI extends Application{
 
-		callback = call;
-		this.port = port;
-		server = new ServerThreads();
-		server.start();
+    ListView<String> listItems = new ListView<String>();
+    Server server;
+    private Connectivity connectivity;
+    Button connect;
+    TextField portTextField;
+    Label portInstruction;
+    int port;
 
-		String announcement1 = "Server Started With Port: " + this.port + ".";
-		callback.accept(announcement1);
-		String announcement2 = "Server Is Waiting For A Connection...";
-		callback.accept(announcement2);
-	}
-
-
-	public void sendUpdatedConnectivity(Connectivity updatedConnectivity) {
-		for (int i=0; i<players.size(); i++) {
-			try {
-				(players.get(i)).out.writeObject(updatedConnectivity);
-			} catch (Exception e) {
-				e.printStackTrace();;
-			}
-		}
-	}
+    ObjectOutputStream out;
+    ObjectInputStream in;
 
 
-	public class ServerThreads extends Thread{
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        launch(args);
+    }
 
-		public void run() {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // TODO Auto-generated method stub
+        primaryStage.setTitle("Server");
+        //create a listview to see every action from the clients
+        primaryStage.setScene(serverConnectionScene());
+        connect.setOnAction(e-> {
 
-			try(ServerSocket mysocket = new ServerSocket(port)){
-				System.out.println("Player Is Connecting...");
+                    try {
+                        port = Integer.parseInt(portTextField.getText());
 
-				while(true) {
+                        if (port >= 0) {
+                            server = new Server(data -> {
+                                Platform.runLater(() -> {
+                                   //connectivity = (Connectivity) data;
+                                   listItems.getItems().add(data.toString());
 
-					playersCount++;
-					ClientThread playerThread = new ClientThread(mysocket.accept(), playersCount);
-					players.add(playerThread);
-					callback.accept("Player Connected To Server: " + "Player #" + playersCount);
-					System.out.println("Player has connected to the server.");
-					playerThread.start();
+                                });
+                            }, port);
+                        }
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Invalid port number. Please enter a valid integer.");
+                    }
 
-				}
-			}
-			catch(Exception e) {
-				//	callback.accept("Server Socket Did Not Launch");
-			}
-		}
-
-	}
-
-	public class ClientThread extends Thread {
-
-		Socket connection;
-		int playerCount;
-		ObjectInputStream in;
-		ObjectOutputStream out;
-		//String randomWord = "";
-		//Connectivity connectivity = new Connectivity();
-		// GameLogic gameLogic = new GameLogic();
-
-
-		ClientThread(Socket s, int count) {
-			this.connection = s;
-			this.playerCount = count;
-		}
-
-		public void initialization(int playerNumber)
-		{
-			GameLogic gameLogic1 = new GameLogic();
-			ClientThread temp = players.get(playerCount - 1);
-
-			connectivity.correctDessert = gameLogic1.chooseRandomWord(1);
-			connectivity.correctFairyTale = gameLogic1.chooseRandomWord(2);
-			connectivity.correctCity = gameLogic1.chooseRandomWord(3);
-
-			connectivity.dessertWordLength = connectivity.correctDessert.length();
-			connectivity.ftWordLength = connectivity.correctFairyTale.length();
-			connectivity.citiesWordLength = connectivity.correctCity.length();
-
-			connectivity.numGuesses = 6;
-
-			connectivity.wonDessert = false;
-
-			connectivity.categoryNumber = 0;
-
-			connectivity.playerActivity = "Initialization";
-
-			connectivity.desserts_attempts = 3;
-			connectivity.fairytales_attempts = 3;
-			connectivity.cities_attempts = 3;
-
-			try{
-				connectivity.command = "connecting";
-				temp.out.writeObject(connectivity);
-			}catch(Exception e){
-				System.out.println("Error: " + e.getMessage());
-			}
-
-		}
+                    primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent t) {
+                            Platform.exit();
+                            System.exit(0);
+                        }
+                    });
 
 
-		//updateClients("New Player On Server. Player #" + playerCount);
-		public void updateClients(String message) {
-			for(int i = 0; i < players.size(); i++) {
-				ClientThread t = players.get(i);
-				try {
-					t.out.writeObject(message);
-				}
-				catch(Exception e) {}
-			}
-		}
+            listItems.setStyle("-fx-background-color: white; -fx-border-color: pink; -fx-border-width: 30");
+            BorderPane root = new BorderPane();
+            root.setPadding(new Insets(10));
+            root.setStyle("-fx-background-color: white");
+            root.setCenter(listItems);
 
-		public void run() {
+            Scene serverCommunication = new Scene(root, 700, 600);
+            primaryStage.setScene(serverCommunication);
+        });
 
-			try {
-				in = new ObjectInputStream(connection.getInputStream());
-				out = new ObjectOutputStream(connection.getOutputStream());
-				connection.setTcpNoDelay(true);
-			} catch (Exception e) {
-				System.out.println("Streams Are Not Open");
-			}
-			updateClients("New Player Has Arrived: Player#" + playerCount);
 
-			connectivity = new Connectivity();
+        primaryStage.show();
+    }
 
-			initialization(playerCount);
-			GameLogic myGame= new GameLogic();
+        public Scene serverConnectionScene()
+        {
+            connect = new Button("Connect");
 
-			while (true) {
-				try {
-					Connectivity tempConnectivity=  (Connectivity) in.readObject();
-					String message = "Player #" + playerCount + ": " + tempConnectivity.playerActivity;
-					callback.accept(message);
-					tempConnectivity.playerActivity = "";
-					System.out.println("Category Number: " + tempConnectivity.categoryNumber);
+            connect.setMinHeight(10);
+            connect.setMinWidth(15);
+            connect.setStyle("-fx-border-color: #ecd5dc; -fx-border-width: 1px; -fx-background-color: #ecd5dc;");
+            connect.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 12));
 
-					if (tempConnectivity.command!=null && tempConnectivity.command.equals("category")){
+            portInstruction = new Label("Enter Port Number:");
+            portInstruction.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
-						if (tempConnectivity.categoryNumber==1){
-							System.out.println("Word to guess: " + tempConnectivity.correctDessert);
-							System.out.println("Length: " + tempConnectivity.dessertWordLength);
-							correctWord = tempConnectivity.correctDessert;
-							tempConnectivity.wordLength= tempConnectivity.dessertWordLength;
-						}
-						else if (tempConnectivity.categoryNumber==2){
-							System.out.println("Word to guess: " + tempConnectivity.correctFairyTale);
-							System.out.println("Length: " + tempConnectivity.ftWordLength);
-							correctWord = tempConnectivity.correctFairyTale;
-							tempConnectivity.wordLength= tempConnectivity.ftWordLength;
-						}
-						else if (tempConnectivity.categoryNumber==3){
-							System.out.println("Word to guess: " + tempConnectivity.correctCity);
-							System.out.println("Length: " + tempConnectivity.citiesWordLength);
-							correctWord = tempConnectivity.correctCity;
-							tempConnectivity.wordLength= tempConnectivity.citiesWordLength;
-						}
+            portTextField = new TextField();
+            portTextField.setMaxSize(100, 30);
 
-						// initialize curr user word in connectivity
-						tempConnectivity.currUserWord = new char[tempConnectivity.wordLength];
-						connectivity.currUserWord = new char[tempConnectivity.wordLength];
+            Label topLabel= new Label ("Server Port Connection");
+            topLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 16));
 
-						for (int i=0; i<tempConnectivity.wordLength; i++){
-							tempConnectivity.currUserWord[i]= ' ';
-							connectivity.currUserWord[i] = ' ';
-						}
+            VBox ports = new VBox(portInstruction, portTextField, connect);
 
-						//tempConnectivity.currUserWord = myGame.setUserWord(correctWord); // initialize current user word in connectivity
-						connectivity.categoryNumber= tempConnectivity.categoryNumber;
-						connectivity.wordLength = tempConnectivity.wordLength;
-						tempConnectivity.command = "word length";
 
-					}
+            BorderPane root = new BorderPane();
+            root.setCenter(ports);
+            root.setTop(topLabel);
+            root.setAlignment(topLabel, Pos.CENTER);
 
-					System.out.println("this is my guess rn: " + tempConnectivity.userLetter + "++");
+            ports.setAlignment(Pos.CENTER);
+            ports.setSpacing(20);
+            return new Scene(root, 700, 600);
+        }
 
-					// get character array and send it out
-					if(connectivity.command!=null && tempConnectivity.command.equals("Playing")){
-
-//						tempConnectivity.userLetter= connectivity.userLetter
-						myGame.correctWord= correctWord;
-						System.out.println("correct word: " + myGame.correctWord);
-						myGame.setUserWord(myGame.correctWord);
-						message = "Player# " + playerCount + ": Checking Letter";
-						callback.accept(message);
-						myGame.userGuess= tempConnectivity.userLetter;
-
-						System.out.println("Before Checking: user guess: " + myGame.userGuess + " tempCon user guess: " + tempConnectivity.userLetter);
-						myGame.checkLetter(myGame.userGuess);
-						System.out.println("After Checking: " + "is correct: " + myGame.isCorrectLetter);
-						//concantonate them together
-						for(int i = 0; i < correctWord.length(); i++)
-						{
-							if(myGame.currUserWord[i] != ' ')
-							{
-								tempConnectivity.currUserWord[i] = myGame.currUserWord[i];
-							}
-						}
-
-						String beString = new String(tempConnectivity.currUserWord);
-						System.out.println("String of temp: " +  beString + "--");
-						tempConnectivity.gotCorrectLetter = myGame.isCorrectLetter;
-						tempConnectivity.numGuesses=myGame.numGuesses;
-						tempConnectivity.alreadyGuessed = myGame.alreadyGuessed;
-						myGame.checkCorrectWord(tempConnectivity.currUserWord);
-						tempConnectivity.gotCorrectWord = myGame.isCorrectWord;
-						System.out.println("Correct word-->" + tempConnectivity.gotCorrectWord);
-						message = "Did player " + playerCount + " get correct letter --> " +tempConnectivity.gotCorrectLetter;
-						callback.accept(message);
-
-						message = " Player # " + playerCount + " guessed letter: " + tempConnectivity.userLetter;
-
-						callback.accept (message);
-					}
-					if(connectivity.command!=null && tempConnectivity.command.equals("WonCategory")){
-						switch (tempConnectivity.categoryNumber)
-						{
-							case 1:
-								tempConnectivity.wonDessert = true;
-								break;
-							case 2:
-								tempConnectivity.wonFairytale = true;
-								break;
-							case 3:
-								tempConnectivity.wonCities = true;
-								break;
-						}
-					}
-						sendUpdatedConnectivity(tempConnectivity);
-				} catch (Exception e) {
-					callback.accept("Something Wrong Happened With The Socket From Player #: " + playerCount + " closing down!" + e.getMessage());
-					//updateClients("Player #" + playerCount + " has left the server!");
-					players.remove(this);
-					playersCount--;
-					break;
-				}
-			}
-
-		}
-	}
 }
-
 
 
 
