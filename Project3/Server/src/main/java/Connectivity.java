@@ -6,7 +6,6 @@ public class Connectivity implements Serializable{
     int dessertWordLength;
     int ftWordLength;
     int citiesWordLength;
-
     int wordLength;
 
     int numGuesses;
@@ -21,6 +20,9 @@ public class Connectivity implements Serializable{
     boolean gotCorrectWord;
     boolean alreadyGuessed;
 
+    boolean wonDessert;
+    boolean wonFairytale;
+    boolean wonCities;
 
     int categoryNumber;
 
