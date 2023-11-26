@@ -39,4 +39,13 @@ public class Connectivity implements Serializable{
     String command;
 
     char [] currUserWord; // array of characters in the user guessed word
+
+    void reset(){
+        numGuesses=6;
+        userLetter= ' ';
+        gotCorrectWord= false;
+        gotCorrectLetter = false;
+        alreadyGuessed= false;
+        command = " ";
+    }
 }
