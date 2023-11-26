@@ -55,14 +55,14 @@ public class GameLogic {
             default:
                 break;
         }
-        setUserWord(); //creates the forming word
+       // setUserWord(); //creates the forming word
         return correctWord;
     }
 
     //Initializes the forming word as all null but the size of the correct word
     //meaning the user guesses and the correct guesses form the correct word
     //hence forming word
-    public void setUserWord()
+    public void setUserWord(String correctWord)
     {
         currUserWord = new char[correctWord.length()]; // user's current word with the length of the correct word
         for (int i = 0; i< currUserWord.length; i++){
@@ -108,7 +108,7 @@ public class GameLogic {
     }
 
     //checks if forming word has been formed and is correct
-    public void checkCorrectWord(){
+    public void checkCorrectWord(char[] currUserWord){
         userArrayToString = new String(currUserWord); //make forming word array in to an actual string
         userArrayToString.toLowerCase(); //always lowercase it
         isCorrectWord = userArrayToString.equals(correctWord); //confirms its the same word
