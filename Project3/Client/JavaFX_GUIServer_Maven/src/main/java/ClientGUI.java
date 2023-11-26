@@ -30,14 +30,13 @@ public class ClientGUI extends Application{
 
 	//global variables
 	public String chosenCategory;
-	public GameLogic myGame;
+
+//	public GameLogic myGame;
 	private List<Label> lettersList;
-	//    int categoryOneChances = 3;
-//    int categoryTwoChances = 3;
-//    int categoryThreeChances = 3;
-	public boolean guessedCat1Word= false; //true if user guessed right word
-	public boolean guessedCat2Word= false;
-	public boolean guessedCat3Word= false;
+
+//	public boolean guessedCat1Word= false; //true if user guessed right word
+//	public boolean guessedCat2Word= false;
+//	public boolean guessedCat3Word= false;
 	public boolean hasWon;
 	TextField portTextField;
 	Button connect;
@@ -312,7 +311,13 @@ public class ClientGUI extends Application{
 		Scene categoriesScene = new Scene(root, 700, 600);
 		primaryStage.setScene(categoriesScene);
 
-		if (connectivity.desserts_attempts == 0 || connectivity.fairytales_attempts == 0 || connectivity.cities_attempts == 0){
+		if (
+				(connectivity.desserts_attempts == 0 && !connectivity.wonDessert) ||
+				(connectivity.fairytales_attempts == 0 && !connectivity.wonFairytale) ||
+				(connectivity.cities_attempts == 0 && !connectivity.wonCities)
+			)
+		{
+			if (!connectivity.wonDessert)
 			hasWon = false;
 			createFinalScene(primaryStage); //goes to final scene if the user lost every chance in one category
 		}
@@ -520,9 +525,9 @@ public class ClientGUI extends Application{
 			connectivity.fairytales_attempts = 3;
 			connectivity.cities_attempts = 3;
 			connectivity.currUserWord = null;
-			guessedCat1Word= false;
-			guessedCat2Word= false;
-			guessedCat3Word= false;
+			connectivity.wonDessert = false;
+			connectivity.wonFairytale = false;
+			connectivity.wonCities = false;
 			hasWon=false; // has player won the game
 			createTitleScene(primaryStage);
 		});
