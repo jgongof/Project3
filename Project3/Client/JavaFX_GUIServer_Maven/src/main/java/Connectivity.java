@@ -20,6 +20,10 @@ public class Connectivity implements Serializable{
     boolean gotCorrectWord;
     boolean alreadyGuessed;
 
+    boolean wonDessert;
+    boolean wonFairytale;
+    boolean wonCities;
+
     int categoryNumber;
 
     String playerActivity;
