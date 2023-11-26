@@ -167,10 +167,11 @@ public class Server extends Thread{
 
 						if (tempConnectivity.categoryNumber==1){
 
-//							if (tempConnectivity.desserts_attempts<3){
-//								tempConnectivity.correctDessert= myGame.chooseRandomWord(1);
-//								tempConnectivity.dessertWordLength=connectivity.correctDessert.length();
-//							}
+							if (tempConnectivity.desserts_attempts<3){
+								System.out.print("YOU HAVE LESS THAN THREE ATTEMPTS IN DESSERTS");
+								tempConnectivity.correctDessert = myGame.chooseRandomWord(1);
+								tempConnectivity.dessertWordLength= tempConnectivity.correctDessert.length();
+							}
 
 							System.out.println("Word to guess: " + tempConnectivity.correctDessert);
 							System.out.println("Length: " + tempConnectivity.dessertWordLength);
@@ -180,10 +181,11 @@ public class Server extends Thread{
 						}
 						else if (tempConnectivity.categoryNumber==2){
 
-//							if (tempConnectivity.fairytales_attempts<3){
-//								tempConnectivity.correctFairyTale= myGame.chooseRandomWord(2);
-//								tempConnectivity.ftWordLength=connectivity.correctFairyTale.length();
-//							}
+							if (tempConnectivity.fairytales_attempts<3){
+								System.out.print("YOU HAVE LESS THAN THREE ATTEMPTS IN FAIRY TALES");
+								tempConnectivity.correctFairyTale = myGame.chooseRandomWord(2);
+								tempConnectivity.ftWordLength= tempConnectivity.correctFairyTale.length();
+							}
 
 
 							System.out.println("Word to guess: " + tempConnectivity.correctFairyTale);
@@ -193,11 +195,11 @@ public class Server extends Thread{
 						}
 						else if (tempConnectivity.categoryNumber==3){
 
-//							if (tempConnectivity.cities_attempts<3){
-//								tempConnectivity.correctCity= myGame.chooseRandomWord(3);
-//								tempConnectivity.citiesWordLength=connectivity.correctCity.length();
-//							}
-
+							if (tempConnectivity.cities_attempts<3){
+								System.out.print("YOU HAVE LESS THAN THREE ATTEMPTS IN CITIES");
+								tempConnectivity.correctCity = myGame.chooseRandomWord(3);
+								tempConnectivity.citiesWordLength= tempConnectivity.correctCity.length();
+							}
 
 							System.out.println("Word to guess: " + tempConnectivity.correctCity);
 							System.out.println("Length: " + tempConnectivity.citiesWordLength);
