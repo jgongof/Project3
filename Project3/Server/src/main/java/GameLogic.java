@@ -55,7 +55,7 @@ public class GameLogic {
             default:
                 break;
         }
-       // setUserWord(); //creates the forming word
+        // setUserWord(); //creates the forming word
         return correctWord;
     }
 
@@ -112,6 +112,22 @@ public class GameLogic {
         userArrayToString = new String(currUserWord); //make forming word array in to an actual string
         userArrayToString.toLowerCase(); //always lowercase it
         isCorrectWord = userArrayToString.equals(correctWord); //confirms its the same word
+    }
+
+    public void reset(){
+
+
+        numGuesses = 6; //should always start with 6 guesses
+
+        userGuess = ' ';
+
+        isCorrectLetter = false; // to make sure that letter is in guessing word
+        isCorrectWord = false; //checks that they got the word right
+        alreadyGuessed = false; //Makes sure they already gussed that letter
+        usedLetters = " "; //tracks used letters
+        chosenCategory = " "; //tracks what category player chose
+
+        userArrayToString = " "; //best way to output forming word
     }
 
 }
