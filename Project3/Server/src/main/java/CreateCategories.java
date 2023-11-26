@@ -17,20 +17,51 @@ public class CreateCategories {
         desserts.add("chocolate");
         desserts.add("cookie");
         desserts.add("pie");
+        desserts.add("brownies");
+        desserts.add("cheesecake");
+        desserts.add("candy");
+        desserts.add("muffin");
+        desserts.add("doughnut");
+        desserts.add("pudding");
+        desserts.add("macaron");
+        desserts.add("eclair");
+        desserts.add("tiramisu");
+        desserts.add("cupcake");
 
         // adding fairytales to list
         fairytales.add("cinderella");
         fairytales.add("pinnochio");
         fairytales.add("shrek");
-        fairytales.add("snowwhite");
+        fairytales.add("dumbo");
         fairytales.add("rapunzel");
+        fairytales.add("bambi");
+        fairytales.add("pocahontas");
+        fairytales.add("aladdin");
+        fairytales.add("frozen");
+        fairytales.add("enchanted");
+        fairytales.add("hercules");
+        fairytales.add("tarzan");
+        fairytales.add("mulan");
+        fairytales.add("maleficent");
+        fairytales.add("fantasia");
 
         // adding to cities list
         cities.add("chicago");
         cities.add("london");
         cities.add("istanbul");
         cities.add("tokyo");
-        cities.add("newyork");
+        cities.add("mumbai");
+        cities.add("sydney");
+        cities.add("berlin");
+        cities.add("madrid");
+        cities.add("dubai");
+        cities.add("seoul");
+        cities.add("amsterdam");
+        cities.add("cairo");
+        cities.add("shanghai");
+        cities.add("manila");
+        cities.add("toronto");
+
     }
 
 
