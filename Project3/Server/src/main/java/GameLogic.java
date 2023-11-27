@@ -35,21 +35,21 @@ public class GameLogic {
                 Random randomIndex = new Random();
                 int indexRandomD = randomIndex.nextInt(myCategories.desserts.size());
                 correctWord = myCategories.desserts.get(indexRandomD);
-                myCategories.desserts.remove(indexRandomD);
+                myCategories.desserts.remove(correctWord);
                 numTriesCat1--;
                 break;
             case 2:
                 Random randomIndexFT = new Random();
                 int indexRandomFT = randomIndexFT.nextInt(myCategories.fairytales.size());
                 correctWord = myCategories.fairytales.get(indexRandomFT);
-                myCategories.fairytales.remove(indexRandomFT);
+                myCategories.fairytales.remove(correctWord);
                 numTriesCat2--;
                 break;
             case 3:
                 Random randomIndexC = new Random();
                 int indexRandomC = randomIndexC.nextInt(myCategories.cities.size());
                 correctWord = myCategories.cities.get(indexRandomC);
-                myCategories.cities.remove(indexRandomC);
+                myCategories.cities.remove(correctWord);
                 numTriesCat3--;
                 break;
             default:
@@ -79,17 +79,17 @@ public class GameLogic {
         //and go back to playing game
 
         //First check if it is in usedLetters
-        Character.toLowerCase(userGuess); //always make it lowercase
-        if(!usedLetters.contains(String.valueOf(userGuess)))
+        //always make it lowercase
+        if(!usedLetters.contains(String.valueOf(Character.toLowerCase(userGuess))))
         {
             //if not already used check if it is in correct word
             alreadyGuessed=false;
-            isCorrectLetter = correctWord.contains(String.valueOf(userGuess)); //checks it's in the word
+            isCorrectLetter = correctWord.contains(String.valueOf(Character.toLowerCase(userGuess))); //checks it's in the word
 
             corrLetterIndices.clear(); //clears array to add in new info
 
             for (int i = 0; i < correctWord.length(); i++) {
-                if (correctWord.charAt(i) == userGuess) {
+                if (correctWord.charAt(i) == Character.toLowerCase(userGuess)) {
                     currUserWord[i] = userGuess; //checking where in the word it is at
                     corrLetterIndices.add(i); //as well as adds the position to another arraylist
                 }
@@ -126,7 +126,6 @@ public class GameLogic {
         alreadyGuessed = false; //Makes sure they already gussed that letter
         usedLetters = " "; //tracks used letters
         chosenCategory = " "; //tracks what category player chose
-
         userArrayToString = " "; //best way to output forming word
     }
 
