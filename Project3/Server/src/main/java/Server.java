@@ -257,7 +257,8 @@ public class Server extends Thread{
 						{
 							if(myGame.currUserWord[i] != ' ')
 							{
-								tempConnectivity.currUserWord[i] = myGame.currUserWord[i];
+								tempConnectivity.currUserWord[i] = Character.toLowerCase(myGame.currUserWord[i]);;
+
 							}
 						}
 
@@ -278,7 +279,7 @@ public class Server extends Thread{
 						myGame.checkCorrectWord(tempConnectivity.currUserWord);
 						tempConnectivity.gotCorrectWord = myGame.isCorrectWord;
 						System.out.println("Correct word-->" + tempConnectivity.gotCorrectWord);
-						message = "Player # " + playerCount + " Guessed Correct Word: " + tempConnectivity.correctDessert + " --> " + tempConnectivity.gotCorrectWord;
+						message = "Player # " + playerCount + " Guessed Correct Word: " + correctWord + " --> " + tempConnectivity.gotCorrectWord;
 						callback.accept(message);
 
 					}
@@ -315,6 +316,4 @@ public class Server extends Thread{
 		}
 	}
 }
-
-
 
