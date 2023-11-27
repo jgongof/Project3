@@ -152,23 +152,24 @@ public class Server extends Thread{
 			while (true) {
 				try {
 					Connectivity tempConnectivity=  (Connectivity) in.readObject();
-					String message = "Player #" + playerCount + ": " + tempConnectivity.playerActivity;
-					callback.accept(message);
+					String message  = "";
 					tempConnectivity.playerActivity = "";
 					System.out.println("Category Number: " + tempConnectivity.categoryNumber);
 
 
-
 					if (tempConnectivity.command!=null && tempConnectivity.command.equals("category")){
 						tempConnectivity.reset();
-						System.out.print("RESETTING CONNECTIVITY");
+						System.out.println("RESETTING CONNECTIVITY");
 						myGame.reset();
-						System.out.print("RESETTING GAME LOGIC");
+						System.out.println("RESETTING GAME LOGIC");
+						message = "Player # " + playerCount + " Has Chosen Catergory: " + tempConnectivity.category;
+						callback.accept(message);
 
 						if (tempConnectivity.categoryNumber==1){
 
 							if (tempConnectivity.desserts_attempts<3){
-								System.out.print("YOU HAVE LESS THAN THREE ATTEMPTS IN DESSERTS");
+								message = "PLAYER #" + playerCount + " HAS LESS THAN THREE ATTEMPTS IN DESSERTS";
+								callback.accept(message);
 								tempConnectivity.correctDessert = myGame.chooseRandomWord(1);
 								tempConnectivity.dessertWordLength= tempConnectivity.correctDessert.length();
 							}
@@ -182,30 +183,35 @@ public class Server extends Thread{
 						else if (tempConnectivity.categoryNumber==2){
 
 							if (tempConnectivity.fairytales_attempts<3){
-								System.out.print("YOU HAVE LESS THAN THREE ATTEMPTS IN FAIRY TALES");
+								message = "PLAYER #" + playerCount + " HAS LESS THAN THREE ATTEMPTS IN FAIRY TALES";
+								callback.accept(message);
 								tempConnectivity.correctFairyTale = myGame.chooseRandomWord(2);
 								tempConnectivity.ftWordLength= tempConnectivity.correctFairyTale.length();
 							}
 
-
 							System.out.println("Word to guess: " + tempConnectivity.correctFairyTale);
 							System.out.println("Length: " + tempConnectivity.ftWordLength);
+
 							correctWord = tempConnectivity.correctFairyTale;
 							tempConnectivity.wordLength= tempConnectivity.ftWordLength;
 						}
 						else if (tempConnectivity.categoryNumber==3){
 
 							if (tempConnectivity.cities_attempts<3){
-								System.out.print("YOU HAVE LESS THAN THREE ATTEMPTS IN CITIES");
+								message = "PLAYER #" + playerCount + " HAS LESS THAN THREE ATTEMPTS IN WORLD CITIES";
+								callback.accept(message);
 								tempConnectivity.correctCity = myGame.chooseRandomWord(3);
 								tempConnectivity.citiesWordLength= tempConnectivity.correctCity.length();
 							}
 
 							System.out.println("Word to guess: " + tempConnectivity.correctCity);
 							System.out.println("Length: " + tempConnectivity.citiesWordLength);
+
 							correctWord = tempConnectivity.correctCity;
 							tempConnectivity.wordLength= tempConnectivity.citiesWordLength;
 						}
+						message = "Player # " + playerCount + " Has To Guess: " + correctWord;
+						callback.accept(message);
 
 						// initialize curr user word in connectivity
 						tempConnectivity.currUserWord = new char[tempConnectivity.wordLength];
@@ -220,7 +226,6 @@ public class Server extends Thread{
 						connectivity.categoryNumber= tempConnectivity.categoryNumber;
 						connectivity.wordLength = tempConnectivity.wordLength;
 						tempConnectivity.command = "word length";
-
 					}
 
 					System.out.println("this is my guess rn: " + tempConnectivity.userLetter + "++");
@@ -232,13 +237,21 @@ public class Server extends Thread{
 						myGame.correctWord= correctWord;
 						System.out.println("correct word: " + myGame.correctWord);
 						myGame.setUserWord(myGame.correctWord);
-						message = "Player# " + playerCount + ": Checking Letter";
+						message = "Player # " + playerCount + " Is Playing" + tempConnectivity.category;
 						callback.accept(message);
-						myGame.userGuess= tempConnectivity.userLetter;
 
+						message = "Player # " + playerCount + " Guessed Letter: " + tempConnectivity.userLetter;
+						callback.accept (message);
+
+						message = "Player # " + playerCount + ": Checking Letter";
+						callback.accept(message);
+
+						myGame.userGuess= tempConnectivity.userLetter;
 						System.out.println("Before Checking: user guess: " + myGame.userGuess + " tempCon user guess: " + tempConnectivity.userLetter);
 						myGame.checkLetter(myGame.userGuess);
 						System.out.println("After Checking: " + "is correct: " + myGame.isCorrectLetter);
+
+
 						//concantonate them together
 						for(int i = 0; i < correctWord.length(); i++)
 						{
@@ -250,39 +263,48 @@ public class Server extends Thread{
 
 						String beString = new String(tempConnectivity.currUserWord);
 						System.out.println("String of temp: " +  beString + "--");
+
 						tempConnectivity.gotCorrectLetter = myGame.isCorrectLetter;
+						message = "Player # " + playerCount + " Get Correct Letter --> " + tempConnectivity.gotCorrectLetter;
+						callback.accept(message);
+
 						tempConnectivity.numGuesses=myGame.numGuesses;
 						tempConnectivity.alreadyGuessed = myGame.alreadyGuessed;
 
 						System.out.print("have i already guessed this letter: " + myGame.userGuess + " --> " + tempConnectivity.alreadyGuessed);
+						message = "Player # " + playerCount + " Already Guessed: " + tempConnectivity.userLetter + " --> " + tempConnectivity.alreadyGuessed;
+						callback.accept(message);
 
 						myGame.checkCorrectWord(tempConnectivity.currUserWord);
 						tempConnectivity.gotCorrectWord = myGame.isCorrectWord;
 						System.out.println("Correct word-->" + tempConnectivity.gotCorrectWord);
-						message = "Did player " + playerCount + " get correct letter --> " +tempConnectivity.gotCorrectLetter;
+						message = "Player # " + playerCount + " Guessed Correct Word: " + tempConnectivity.correctDessert + " --> " + tempConnectivity.gotCorrectWord;
 						callback.accept(message);
 
-						message = " Player # " + playerCount + " guessed letter: " + tempConnectivity.userLetter;
-
-						callback.accept (message);
 					}
 					if(connectivity.command!=null && tempConnectivity.command.equals("WonCategory")){
 						switch (tempConnectivity.categoryNumber)
 						{
 							case 1:
 								tempConnectivity.wonDessert = true;
+								message = "Player # " + playerCount + " Won Dessert --> " + tempConnectivity.wonDessert ;
+								callback.accept(message);
 								break;
 							case 2:
 								tempConnectivity.wonFairytale = true;
+								message = "Player # " + playerCount + " Won Fairy Tale --> " + tempConnectivity.wonFairytale ;
+								callback.accept(message);
 								break;
 							case 3:
 								tempConnectivity.wonCities = true;
+								message = "Player # " + playerCount + " Won World Cities --> " + tempConnectivity.wonCities ;
+								callback.accept(message);
 								break;
 						}
 					}
 					sendUpdatedConnectivity(tempConnectivity);
 				} catch (Exception e) {
-					callback.accept("Something Wrong Happened With The Socket From Player #: " + playerCount + " closing down!" + e.getMessage());
+					callback.accept("Player #: " + playerCount + " Disconnected. Closing Down!");
 					//updateClients("Player #" + playerCount + " has left the server!");
 					players.remove(this);
 					playersCount--;
@@ -293,7 +315,6 @@ public class Server extends Thread{
 		}
 	}
 }
-
 
 
 
