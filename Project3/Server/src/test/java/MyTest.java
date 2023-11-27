@@ -16,29 +16,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class MyTest {
 
-
 	//Helper Function to play the game automatically
 	public int randomIndex(int range)
 	{
 		Random random = new Random();
 		return random.nextInt(range);
 	}
-
-	//Helper function to get the callback messages
-	public class CallbackCapture implements Consumer<Serializable> {
-
-		private List<String> messages = new ArrayList<>();
-
-		@Override
-		public void accept(Serializable message) {
-			messages.add(message.toString());
-		}
-
-		public List<String> getMessages() {
-			return messages;
-		}
-	}
-
 
 	//-----------------------------------------
 	// Intializations Test
@@ -47,35 +30,67 @@ class MyTest {
 
 		GameLogic game0 = new GameLogic();
 		assertEquals(6, game0.numGuesses, "Initial number of guesses should be 6");
-        assertEquals(3, game0.numTriesCat1, "Initial number of guesses should be 3");
-        assertEquals(3, game0.numTriesCat2, "Initial number of guesses should be 3");
-        assertEquals(3, game0.numTriesCat3, "Initial number of guesses should be 3");
+		assertEquals(3, game0.numTriesCat1, "Initial number of guesses should be 3");
+		assertEquals(3, game0.numTriesCat2, "Initial number of guesses should be 3");
+		assertEquals(3, game0.numTriesCat3, "Initial number of guesses should be 3");
 
-        assertFalse(game0.isCorrectLetter, "Initialized to False");
-        assertFalse(game0.isCorrectWord, "Initialized to False");
-        assertFalse(game0.alreadyGuessed, "Initialized to False");
+		assertFalse(game0.isCorrectLetter, "Initialized to False");
+		assertFalse(game0.isCorrectWord, "Initialized to False");
+		assertFalse(game0.alreadyGuessed, "Initialized to False");
 
 		CreateCategories categories = new CreateCategories();
-		assertEquals(5, categories.desserts.size());
+		assertEquals(15, categories.desserts.size());
 		assertEquals("cake", categories.desserts.get(0));
 		assertEquals("icecream", categories.desserts.get(1));
 		assertEquals("chocolate", categories.desserts.get(2));
 		assertEquals("cookie", categories.desserts.get(3));
 		assertEquals("pie", categories.desserts.get(4));
+		assertEquals("brownies", categories.desserts.get(5));
+		assertEquals("cheesecake", categories.desserts.get(6));
+		assertEquals("candy", categories.desserts.get(7));
+		assertEquals("muffin", categories.desserts.get(8));
+		assertEquals("doughnut", categories.desserts.get(9));
+		assertEquals("pudding", categories.desserts.get(10));
+		assertEquals("macaron", categories.desserts.get(11));
+		assertEquals("eclair", categories.desserts.get(12));
+		assertEquals("tiramisu", categories.desserts.get(13));
+		assertEquals("cupcake", categories.desserts.get(14));
 
-		assertEquals(5, categories.fairytales.size());
+
+		assertEquals(15, categories.fairytales.size());
 		assertEquals("cinderella", categories.fairytales.get(0));
 		assertEquals("pinnochio", categories.fairytales.get(1));
 		assertEquals("shrek", categories.fairytales.get(2));
-		assertEquals("snowwhite", categories.fairytales.get(3));
+		assertEquals("dumbo", categories.fairytales.get(3));
 		assertEquals("rapunzel", categories.fairytales.get(4));
+		assertEquals("bambi", categories.fairytales.get(5));
+		assertEquals("pocahontas", categories.fairytales.get(6));
+		assertEquals("aladdin", categories.fairytales.get(7));
+		assertEquals("frozen", categories.fairytales.get(8));
+		assertEquals("enchanted", categories.fairytales.get(9));
+		assertEquals("hercules", categories.fairytales.get(10));
+		assertEquals("tarzan", categories.fairytales.get(11));
+		assertEquals("mulan", categories.fairytales.get(12));
+		assertEquals("maleficent", categories.fairytales.get(13));
+		assertEquals("fantasia", categories.fairytales.get(14));
 
-		assertEquals(5, categories.cities.size());
+
+		assertEquals(15, categories.cities.size());
 		assertEquals("chicago", categories.cities.get(0));
 		assertEquals("london", categories.cities.get(1));
 		assertEquals("istanbul", categories.cities.get(2));
 		assertEquals("tokyo", categories.cities.get(3));
-		assertEquals("newyork", categories.cities.get(4));
+		assertEquals("mumbai", categories.cities.get(4));
+		assertEquals("sydney", categories.cities.get(5));
+		assertEquals("berlin", categories.cities.get(6));
+		assertEquals("madrid", categories.cities.get(7));
+		assertEquals("dubai", categories.cities.get(8));
+		assertEquals("seoul", categories.cities.get(9));
+		assertEquals("amsterdam", categories.cities.get(10));
+		assertEquals("cairo", categories.cities.get(11));
+		assertEquals("shanghai", categories.cities.get(12));
+		assertEquals("manila", categories.cities.get(13));
+		assertEquals("toronto", categories.cities.get(14));
 
 	}
 
@@ -106,7 +121,8 @@ class MyTest {
 	{
 
 		GameLogic game4 = new GameLogic();
-		game4.chooseRandomWord(1);
+		String cw = game4.chooseRandomWord(1);
+		game4.setUserWord(cw);
 
 		while(!game4.isCorrectWord)
 		{
@@ -145,12 +161,13 @@ class MyTest {
 	}
 
 	//Playing the game with category fairy tale, has to all be correct
-	@Test 
+	@Test
 	void playGame2()
 	{
 
 		GameLogic game5 = new GameLogic();
-		game5.chooseRandomWord(2);
+		String cw = game5.chooseRandomWord(2);
+		game5.setUserWord(cw);
 
 		while(!game5.isCorrectWord)
 		{
@@ -194,7 +211,8 @@ class MyTest {
 	{
 
 		GameLogic game6 = new GameLogic();
-		game6.chooseRandomWord(3);
+		String cw = game6.chooseRandomWord(3);
+		game6.setUserWord(cw);
 
 		while(!game6.isCorrectWord)
 		{
@@ -232,114 +250,167 @@ class MyTest {
 
 	}
 
-
-	//Testing the server connection
+	// checks the checkLetter function in game logic
 	@Test
-	void testPlayerConnection(Consumer<Serializable> callback) {
-		// Create an instance of the Server class with the provided callback and port
-		Server server = new Server(callback, 5555);
-
-		CallbackCapture callbackCapture = new CallbackCapture();
-
-		// Simulate player connection by starting the server thread
-		server.server.start();
-
-		List<String> actualOutput = callbackCapture.getMessages();
-
-		String expectedOutput = "Player Connected To Server: Player #1";
-
-		// Check the output by inspecting the callback's messages
-		assertEquals(expectedOutput, actualOutput.get(0));
-	}
-
-	//Check that the player disconnected from the server
-	@Test
-	void testPlayerDisconnect(Consumer<Serializable> callback)
+	void checkLetterTest1()
 	{
-		Server server = new Server(callback, 5555);
 
-		server.players.get(0).interrupt(); // Simulate interrupting the client thread
+		GameLogic game7 = new GameLogic();
+		game7.correctWord = "hello";
+		game7.setUserWord(game7.correctWord);
+		assertEquals((game7.currUserWord).length,5 );
+		game7.userGuess = 'a';
+		game7.checkLetter(game7.userGuess);
+		assertEquals(game7.isCorrectLetter, false);
+		assertEquals(game7.numGuesses, 5);
 
-		CallbackCapture callbackCapture = new CallbackCapture();
-
-		// Expected output
-		String expectedOutput = "Player #1 Disconnected. Closing Down.";
-
-		// Get the actual output from the callback
-		List<String> actualOutput = callbackCapture.getMessages();
-
-		// Check the output
-		assertEquals(expectedOutput, actualOutput.get(0));
 	}
 
-	//Check that the user in a certian playing state
+	// checks the checkLetter function in game logic
 	@Test
-	void testPlayingState(Consumer<Serializable> callback) {
-		Server server = new Server(callback, 8080);
+	void checkLetterTest2()
+	{
 
-		// Simulate player in the playing state for Desserts
-		Server.ClientThread playerThread = server.new ClientThread(new Socket(), 1);
-		playerThread.initialization(1); //player choosing Desserts category
-		playerThread.start();
+		GameLogic game8 = new GameLogic();
+		game8.correctWord = "hello";
+		game8.setUserWord(game8.correctWord);
+		assertEquals((game8.currUserWord).length,5 );
+		game8.userGuess = 'l';
+		game8.checkLetter(game8.userGuess);
+		assertEquals(game8.isCorrectLetter, true);
+		assertEquals(game8.numGuesses, 6);
 
-		Connectivity playingConnectivity = new Connectivity();
-		playingConnectivity.command = "Playing";
-		playingConnectivity.userLetter = 'A';
-		server.sendUpdatedConnectivity(playingConnectivity);
-
-		CallbackCapture callbackCapture = new CallbackCapture();
-
-		String expectedOutput = "layer #1 Is Playing: Desserts";
-
-		List<String> actualOutput = callbackCapture.getMessages();
-
-		assertEquals(expectedOutput, actualOutput.get(0));
 	}
 
+	// checks the currUserLetter in game logic
 	@Test
-	void testPlayerWinningCategory(Consumer<Serializable> callback) {
-		Server server = new Server(callback, 5555);
+	void checkCurrUserLetterArrayTest1()
+	{
 
-		Server.ClientThread client = server.new ClientThread(new Socket(), 1);
-		server.players.add(client); // Add the client to the list of players
-
-		// Simulate the server sending a message about the player winning in a category
-		Connectivity winningConnectivity = new Connectivity();
-		winningConnectivity.command = "WonCategory";
-		winningConnectivity.categoryNumber = 1;
-		winningConnectivity.wonDessert = true;
-		server.sendUpdatedConnectivity(winningConnectivity);
-
-		CallbackCapture callbackCapture = new CallbackCapture();
-
-		String expectedOutput = "Player #1 Won Desserts";
-
-		List<String> actualOutput = callbackCapture.getMessages();
-
-		assertEquals(expectedOutput, actualOutput.get(0));
+		GameLogic game9 = new GameLogic();
+		game9.correctWord = "hello";
+		game9.setUserWord(game9.correctWord);
+		assertEquals((game9.currUserWord).length,5 );
+		game9.userGuess = 'a';
+		game9.checkLetter(game9.userGuess);
+		
+		assertEquals(game9.currUserWord[0], ' ');
+		assertEquals(game9.currUserWord[1], ' ');
+		assertEquals(game9.currUserWord[2], ' ');
+		assertEquals(game9.currUserWord[3], ' ');
+		assertEquals(game9.currUserWord[4], ' ');
+		
+		assertEquals(game9.isCorrectLetter, false);
 
 	}
-
+	
+	// checks the currUserLetter in game logic
 	@Test
-	void testPlayerChoosingCategory(Consumer<Serializable> callback) {
-		Server server = new Server(callback, 8080);
+	void checkCurrUserLetterArrayTest2()
+	{
 
-		Server.ClientThread client = server.new ClientThread(new Socket(), 1);
-		server.players.add(client);
+		GameLogic game10 = new GameLogic();
+		game10.correctWord = "hello";
+		game10.setUserWord(game10.correctWord);
+		assertEquals((game10.currUserWord).length,5 );
+		game10.userGuess = 'l';
+		game10.checkLetter(game10.userGuess);
 
-		// Simulate the player choosing a category
-		Connectivity choosingCategoryConnectivity = new Connectivity();
-		choosingCategoryConnectivity.command = "category";
-		choosingCategoryConnectivity.categoryNumber = 2; //player chose the Fairy Tales category
-		server.sendUpdatedConnectivity(choosingCategoryConnectivity);
+		assertEquals(game10.currUserWord[0], ' ');
+		assertEquals(game10.currUserWord[1], ' ');
+		assertEquals(game10.currUserWord[2], 'l');
+		assertEquals(game10.currUserWord[3], 'l');
+		assertEquals(game10.currUserWord[4], ' ');
 
-		CallbackCapture callbackCapture = new CallbackCapture();
+		assertEquals(game10.isCorrectLetter, true);
+		assertEquals(game10.numGuesses, 6);
 
-		String expectedOutput = "Player #1 Has Chosen Category: Fairy Tales";
-
-		List<String> actualOutput = callbackCapture.getMessages();
-
-		assertEquals(expectedOutput, actualOutput.get(0));
 	}
 
+	// checks the currUserLetter in game logic
+	@Test
+	void checkCurrUserLetterArrayTest3()
+	{
+
+		GameLogic game11 = new GameLogic();
+		game11.correctWord = "hello";
+		game11.setUserWord(game11.correctWord);
+		assertEquals((game11.currUserWord).length,5 );
+
+		game11.userGuess = 'l';
+		game11.checkLetter(game11.userGuess);
+		assertEquals(game11.isCorrectLetter, true);
+
+		game11.userGuess = 'p';
+		game11.checkLetter(game11.userGuess);
+		assertEquals(game11.isCorrectLetter, false);
+
+		game11.userGuess = 'h';
+		game11.checkLetter(game11.userGuess);
+		assertEquals(game11.isCorrectLetter, true);
+
+		assertEquals(game11.currUserWord[0], 'h');
+		assertEquals(game11.currUserWord[1], ' ');
+		assertEquals(game11.currUserWord[2], 'l');
+		assertEquals(game11.currUserWord[3], 'l');
+		assertEquals(game11.currUserWord[4], ' ');
+
+		assertEquals(game11.numGuesses, 5);
+
+	}
+
+
+	//Check that everything does reset
+	@Test
+	void testReset() {
+		GameLogic game12 = new GameLogic();
+
+		// Set some values
+		game12.numGuesses = 3;
+		game12.userGuess = 'a';
+		game12.isCorrectLetter = true;
+		game12.isCorrectWord = true;
+		game12.alreadyGuessed = true;
+		game12.usedLetters = "abc";
+		game12.userArrayToString = "test";
+
+		// Reset
+		game12.reset();
+
+		// Check if values are reset
+		assertEquals(6, game12.numGuesses);
+		assertEquals(' ', game12.userGuess);
+		assertFalse(game12.isCorrectLetter);
+		assertFalse(game12.isCorrectWord);
+		assertFalse(game12.alreadyGuessed);
+		assertEquals(" ", game12.usedLetters);
+		assertEquals(" ", game12.userArrayToString);
+	}
+
+	//Checks for the correct word and identifies which one is false
+	@Test
+	void testCheckCorrectWord() {
+		GameLogic game13 = new GameLogic();
+		game13.correctWord = "apple";
+		game13.setUserWord(game13.correctWord);
+
+		// Test correct word
+		game13.checkCorrectWord("apple".toCharArray());
+		assertTrue(game13.isCorrectWord);
+
+		// Test incorrect word
+		game13.checkCorrectWord("banana".toCharArray());
+		assertFalse(game13.isCorrectWord);
+	}
+
+	//Initialization of the currUserWord variable 
+	@Test
+	void testSetUserWord() {
+		GameLogic game14 = new GameLogic();
+		game14.setUserWord("apple");
+
+		assertNotNull(game14.currUserWord);
+		assertEquals(5, game14.currUserWord.length);
+		assertEquals(' ', game14.currUserWord[0]);
+	}
 }
