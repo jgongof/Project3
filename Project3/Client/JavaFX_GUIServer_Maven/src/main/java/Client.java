@@ -11,7 +11,7 @@ public class Client {
 	Clientele player;
 	ObjectOutputStream out;
 	ObjectInputStream in;
-	private Consumer<Serializable> callback;
+	Consumer<Serializable> callback;
 	int port;
 
 	Connectivity connection = new Connectivity();
