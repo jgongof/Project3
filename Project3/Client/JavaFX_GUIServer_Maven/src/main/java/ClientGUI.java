@@ -34,9 +34,6 @@ public class ClientGUI extends Application{
 //	public GameLogic myGame;
 	private List<Label> lettersList;
 
-//	public boolean guessedCat1Word= false; //true if user guessed right word
-//	public boolean guessedCat2Word= false;
-//	public boolean guessedCat3Word= false;
 	public boolean hasWon;
 	TextField portTextField;
 	Button connect;
@@ -221,17 +218,6 @@ public class ClientGUI extends Application{
 
 			connectivity.command = "WonCategory";
 
-//			if (connectivity.category == "Desserts"){
-////				connectivity.wonDessert = true;
-//
-//			}
-//			else if (connectivity.category == "Fairy Tales"){
-////				connectivity.wonFairytale = true;
-//			}
-//			else if (connectivity.category == "World Cities"){
-////				connectivity.wonCities = true;
-//			}
-
 			clientConnection.message(connectivity);
 			//good ending
 			endingMessage.setText("Congrats! You guessed the word!");
@@ -352,7 +338,7 @@ public class ClientGUI extends Application{
 		category1Button.setOnAction(event -> {
 			if (connectivity.desserts_attempts > 0) {
 				System.out.println("category 1 clicked!");
-				connectivity.category = "desserts";
+				connectivity.category = "Desserts";
 				connectivity.categoryNumber = 1;
 				connectivity.playerActivity = "Chose Dessert Category";
 				connectivity.desserts_attempts--;
@@ -393,10 +379,7 @@ public class ClientGUI extends Application{
 				connectivity.cities_attempts--;
 				connectivity.command= "category";
 				clientConnection.message(connectivity);
-//				System.out.print(connectivity.categoryWordLength);
 
-
-				// createGameScene(primaryStage);
 			}
 		});
 	}
